@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<title>Flaggenheiß nach Internationalem Signalbuch</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Flaggenalphabet nach Internationalem Signalbuch">
+	<meta name="keywords" content="Informatik, Nautik, Mathematik">
+	<meta name="author" content="C. Vogel">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!--
+
+This work is licensed under version 4.0 of the Creative Commons CC-BY-SA license.
+The above human readable summary does not constitute an actual grant of license;
+please review https://creativecommons.org/licenses/by-sa/4.0/legalcode for the legal code of the license. 
+
+Contact: it@mathmat.org (Author: C. Vogel)
+
+
+
+Diese Arbeit ist lizensiert unter der Version 4.0 der Creative Commons CC-BY-SA Lizenz. 
+Für eine vollständige Version des Lizenztextes gehen Sie bitte auf folgende Seite:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode (englisch) bzw. auf:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode.de für die deutsche Übersetzung.
+
+Kontakt: it@mathmat.org (Autor: C. Vogel)
+
+-->
+
+<!--
+
+Version 2, 15.4.2024
+ Grundversion des Javascript-Formulars
+ CC-BY-SA 4.0 hinzugefügt
+ Kopf hinzugefügt
+ Style hinzugefügt 
+ Interaktion mit Javascript-Formular
+ Bereinigung der Defs
+ Neuer Algorithmus zur Auswertung der Eingabe, Codierung in Flaggen und zur grafischen Ausgabe
+
+Version 3, 16.4.2024
+ Emailadresse für Feedback
+
+Version 4, 11.8.2024
+ Überarbeitung Groß- und Kleinbuchstaben, Hilfsstander
+
+Version 5, 11.8.2024
+ ENTER löst hisse(); aus und lädt die Seite nicht mehr neu.
+
+Version 6, 12.8.2024
+ flaglibrary version 2, english,
+ HTML-Code sanitized,
+ declared magic numbers (Kudos: Brian Kernighan, Dennis Ritchie)
+-->
+
+	
+<style> 
+<!--
+
+	body, input, textarea {
+		font-family:sans-serif;
+		font-size:14pt;
+	}
+		
+	input {
+		background-color:lavender;border: #000 solid 1px;
+	}
+	
+	h1 {
+		font-size: 20pt;
+	}
+		
+-->
+</style>
+<script>
+
+function hisse() {
+
+    let signal = document.getElementById("eingabe").value.toUpperCase();
+
+    let alphabet = { 
+	A:"alpha",		B:"bravo", 		C:"charlie", 	D:"delta", 	E:"echo", 	F:"foxtrott",	G:"golf",
+	H:"hotel",		I:"india",		J:"juliett",	K:"kilo",	L:"lima",	M:"mike",	N:"november",
+	O:"oscar",		P:"papa",		Q:"quebec",	R:"romeo",	S:"sierra",	T:"tango",	U:"uniform",
+	V:"victor",		W:"whiskey",X:"xray",	Y:"yankee",	Z:"zulu",	1:"one", 	2:"two",
+	3:"three",		4:"four", 		5:"five", 	6:"six",	7:"seven",	8:"eight",	9:"nine",
+	0:"zero",               ".":"first", 		",":"second", 	";":"third", 	"*":"code"
+	};
+
+    const LEFT_MARGIN = 30;
+    const TOP_MARGIN = 35;
+    const FLAG_SPACEING = 130;
+
+    let bild = '<svg viewBox="0 0 500 1200" height="600" xmlns="http://www.w3.org/2000/svg">'+
+	'<use href="#flagpole"" />';
+	
+    for (i=0; i<signal.length; i++) {
+	bild += 
+	    '	<use href="#' + alphabet[signal[i]] +
+	    '" transform="translate(' + LEFT_MARGIN + ',' +
+	    String(TOP_MARGIN + i * FLAG_SPACEING) + ')" />';
+    }
+    
+    bild += '</svg>';
+
+    document.title = "Heiß nach ISB: "+ signal;
+    document.getElementById("ausgabe").innerHTML = bild;  
+	
+}
+
+
+  function clearImg() {
+    document.getElementById("ausgabe").innerHTML = "";
+    document.title = "Flaggenheiß nach Internationalem Signalbuch";
+  }
+
+
+  function stopRKey(evt) {
+  // https://stackoverflow.com/questions/7060750/detect-the-enter-key-in-a-text-input-field
+  // Kudos: https://stackoverflow.com/users/3577946/indra-kumar-s (Sorry, I altered your idea! ;) )
+      
+    var evt = (evt) ? evt : ((event) ? event : null);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+    if ((evt.keyCode == 13) && (node.type=="text"))  {hisse(); return false;} 
+ } 
+
+</script>
+
+</head>
+
+<body>
+  <script>document.onkeypress = stopRKey;</script>
+  <form>
+    <table>
+      <tr>
+	<td>Eingabe:
+	  <input type="text" id="eingabe" value="EINGABE"> (a-z, A-Z, 0-9, '.': Erster, ',': Zweiter, ';': Dritter, '*': Code/Antwort, '#': Lücke)
+	  <input type="button" onClick="hisse()" value="Heiße Flaggen">
+	  <input type="reset" value="Eingaben zurücksetzen" onClick="clearImg();">
+	</td>
+      </tr>
+      <tr>
+	<td><hr></td>
+      </tr>
+      <tr>
+	<td id="ausgabe"></td>
+      </tr>
+    </table>
+  </form>
+	
+  <div style="margin-top:1em;">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.de" target="new">
+      <img src="https://licensebuttons.net/l/by-sa/3.0/88x31.png" style="height:20px;" alt="CC-BY-SA 4.0">
+    </a>
+    Autor: Carsten Vogel (it@mathmat.org), Version 6, 12.8.2024
+  </div>
+
+
+<!-- BEGIN of flaglibrary ISB -->
+<svg xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+
+<!--
+	List of definitions for ISB
+	Version 2, 12.8.2024
+	
+	colors: 
+		feuerrot (red), kobaltblau (blue), rapsgelb (yellow), cremeweiß (white), tiefschwarz (black)
+	mast:
+		flagpole
+	shapes:
+		flagbody, numberbody
+	letterflags:
+		alpha, bravo, charlie, delta, echo, foxtrott, golf, hotel, india,
+		juliett, kilo, lima, mike, november, oscar, papa, quebec, romeo, 
+		sierra, tango, uniform, victor, whiskey, xray, yankee, zulu
+	numberflags:
+		one, two, three, four, five, six, seven, eight, nine, zero
+	supplements:
+		first, second, third
+	codeflag:
+		code
+-->
+
+<defs>
+
+	<linearGradient id="feuerrot">
+		<stop offset="0%" stop-color="#AB2524" />
+	</linearGradient>
+		
+	<linearGradient id="kobaltblau">
+		<stop offset="0%" stop-color="#232D53" />
+	</linearGradient>
+		
+	<linearGradient id="rapsgelb">
+		<stop offset="0%" stop-color="#EEC900" />
+	</linearGradient>
+	
+	<linearGradient id="cremeweiss">
+		<stop offset="0%" stop-color="#EFEBDC" />
+	</linearGradient>
+		
+	<linearGradient id="tiefschwarz">
+		<stop offset="0%" stop-color="#0A0A0D" />
+	</linearGradient>
+
+	<g id="flagpole">
+	 <polygon points="1 1 20 1 20 11 16 11 16 1200 5 1200 5 11 1 11" stroke="#000000" stroke-width="1" fill="#CCDDEE" />
+	</g>
+	
+	<g id="flagbody">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+
+	<g id="numberbody">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+
+	<g id="alpha">
+		<polygon points="1 1 150 1 120 61 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="76 1 150 1 120 61 150 120 76 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="1 1 150 1 120 61 150 120 1 120" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+
+	<g id="bravo">
+		<polygon points="1 1 150 1 120 61 150 120 1 120" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="1 1 150 1 120 61 150 120 1 120" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+	
+	<g id="charlie">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+	 <polygon points="1 1 150 1 150 25 1 25" stroke="none" fill="url(#kobaltblau)" />
+	 <polygon points="1 120 150 120 150 97 1 97" stroke="none" fill="url(#kobaltblau)" />
+	 <polygon points="1 49 150 49 150 72 1 72" stroke="none" fill="url(#feuerrot)" />
+	 <use href="#flagbody"/>
+	</g>
+	
+	<g id="delta">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+	 <polygon points="1 41 150 41 150 80 1 80" stroke="none" fill="url(#kobaltblau)" />
+	 <use href="#flagbody"/>
+	</g>
+	
+	<g id="echo">
+	 <polygon points="1 1 150 1 150 61 1 61" stroke="none" fill="url(#kobaltblau)" />
+	 <polygon points="1 61 150 61 150 120 1 120" stroke="none" fill="url(#feuerrot)" />
+	 <use href="#flagbody"/>
+	</g>
+	
+	<g id="foxtrott">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+	 <polygon points="76 1 150 61 76 120 1 61" stroke="none" fill="url(#feuerrot)" />
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="golf">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+	 <polygon points="26 1 51 1 51 120 26 120" stroke="none" fill="url(#kobaltblau)" />
+ 	 <polygon points="76 1 101 1 101 120 76 120" stroke="none" fill="url(#kobaltblau)" />
+ 	 <polygon points="126 1 150 1 150 120 126 120" stroke="none" fill="url(#kobaltblau)" />
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="hotel">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+	 <polygon points="76 1 150 1 150 120 76 120" stroke="none" fill="url(#feuerrot)" />
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="india">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+	 <circle cx="76" cy="61" r="30" fill="url(#tiefschwarz)" />
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="juliett">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#kobaltblau)" />
+	 <polygon points="1 41 150 41 150 80 1 80" stroke="none" fill="url(#cremeweiss)" />
+	 <use href="#flagbody"/>
+	</g>
+	
+	<g id="kilo">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+	 <polygon points="76 1 150 1 150 120 76 120" stroke="none" fill="url(#kobaltblau)" />
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="lima">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+	 <polygon points="76 1 150 1 150 61 76 61" stroke="none" fill="url(#tiefschwarz)" />
+ 	 <polygon points="1 61 76 61 76 120 1 120" stroke="none" fill="url(#tiefschwarz)" />
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="mike">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#kobaltblau)" />
+	 <polygon points="1 1 31 1 150 101 150 120 121 120 1 21" stroke="none" fill="url(#cremeweiss)" />	 
+	 <polygon points="150 1 150 21 31 120 1 120 1 101 121 1" stroke="none" fill="url(#cremeweiss)" />	 
+	 <use href="#flagbody"/>
+	</g>
+
+	<g id="november">
+		<g id="november_rect">
+			<polygon points="1 1 38 1 38 31 1 31" stroke="none" fill="url(#kobaltblau)" />	 
+			<polygon points="76 1 112 1 112 31 76 31" stroke="none" fill="url(#kobaltblau)" />	 
+		</g>
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<use href="#november_rect"/> 
+		<use href="#november_rect" transform="translate(37 30)"/>
+		<use href="#november_rect" transform="translate(0 60)"/>
+		<use href="#november_rect" transform="translate(37 90)"/>
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="oscar">
+	 <polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+	 <polygon points="1 1 150 1 150 120 " stroke="none" fill="url(#feuerrot)" />
+	 <use href="#flagbody"/>
+	</g>
+	
+	<g id="papa">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="41 36 109 36 109 86 41 86" stroke="none" fill="url(#cremeweiss)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="quebec">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="romeo">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="56 1 95 1 95 120 56 120" stroke="none" fill="url(#rapsgelb)" />
+		<polygon points="1 41 150 41 150 80 1 80" stroke="none" fill="url(#rapsgelb)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="sierra">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="41 36 109 36 109 86 41 86" stroke="none" fill="url(#kobaltblau)" />
+		<use href="#flagbody"/>
+	</g>
+	
+	<g id="tango">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 1 50 1 50 120 1 120" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="101 1 150 1 150 120 101 120" stroke="none" fill="url(#kobaltblau)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="uniform">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="76 1 150 1 150 61 76 61" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 61 76 61 76 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="victor">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 1 31 1 150 101 150 120 121 120 1 21" stroke="none" fill="url(#feuerrot)" />	 
+		<polygon points="150 1 150 21 31 120 1 120 1 101 121 1" stroke="none" fill="url(#feuerrot)" />	 
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="whiskey">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="21 19 129 19 129 102 21 102" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="41 36 109 36 109 86 41 86" stroke="none" fill="url(#feuerrot)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="xray">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="56 1 95 1 95 120 56 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="1 41 150 41 150 80 1 80" stroke="none" fill="url(#kobaltblau)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="yankee">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#rapsgelb)" />
+		<polygon points="31 1 60 1 1 49 1 25" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="91 1 120 1 1 97 1 73" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="150 1 1 120 31 120 150 25" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="61 120 150 49 150 73 91 120" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="150 120 150 96 120 120" stroke="none" fill="url(#feuerrot)" />
+		<use href="#flagbody"/>
+	</g>
+
+	<g id="zulu">
+		<polygon points="1 1 150 1 150 120 1 120" stroke="none" fill="url(#tiefschwarz)" />
+		<polygon points="1 1 150 1 76 61" stroke="none" fill="url(#rapsgelb)" />
+		<polygon points="150 1 76 61 150 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="1 120 76 61 150 120" stroke="none" fill="url(#feuerrot)" />
+		<use href="#flagbody"/>
+	</g>
+	
+	<g id="first">
+		<polygon points="1 1 150 61 1 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="1 31 80 61 1 90" stroke="none" fill="url(#rapsgelb)" />
+		<polygon points="1 1 150 61 1 120" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+
+	<g id="second">
+		<polygon points="1 1 150 61 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 1 60 25 60 97 1 120" stroke="none" fill="url(#kobaltblau)" />
+		<polygon points="1 1 150 61 1 120" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+
+	<g id="third">
+		<polygon points="1 1 150 61 1 120" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 41 102 41 150 61 102 80 1 80" stroke="none" fill="url(#tiefschwarz)" />
+		<polygon points="1 1 150 61 1 120" stroke="#000000" stroke-width="1" fill="none" />
+	</g>
+	
+	<g id="one" transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#cremeweiss)" />
+		<circle cx="96" cy="50" r="33" fill="url(#feuerrot)"/>
+		<use href="#numberbody"/>
+	</g>
+
+	<g id="two"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#kobaltblau)" />
+		<circle cx="96" cy="50" r="33" fill="url(#cremeweiss)"/>
+		<use href="#numberbody"/>
+	</g>
+
+	<g id="three"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 1 111 13 111 88 1 100" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="221 24 330 36 330 65 221 77" stroke="none" fill="url(#kobaltblau)" />
+		<use href="#numberbody"/>
+	</g>
+	
+	<g id="four"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="1 38 110 41 110 13 136 15 136 42 330 45 330 55  136 61 136 86 110 89 110 61  1 63" stroke="none" fill="url(#cremeweiss)" />
+		<use href="#numberbody"/>
+	</g>
+
+	<g id="five"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#rapsgelb)" />
+		<polygon points="156 17 330 36 330 65 156 84" stroke="none" fill="url(#kobaltblau)" />
+		<use href="#numberbody"/>
+	</g>
+	
+	<g id="six"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 1 330 36 330 51 1 51" stroke="none" fill="url(#tiefschwarz)" />
+		<use href="#numberbody"/>
+	</g>
+	
+	<g id="seven"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="1 1 330 36 330 50 1 50" stroke="none" fill="url(#rapsgelb)" />
+		<use href="#numberbody"/>
+	</g>
+
+	<g id="eight"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 38 110 41 110 13 136 15 136 42 330 45 330 55  136 61 136 86 110 89 110 61  1 63" stroke="none" fill="url(#feuerrot)" />
+		<use href="#numberbody"/>
+	</g>
+
+	<g id="nine"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="156 17 330 36 330 51 156 51" stroke="none" fill="url(#tiefschwarz)" />	
+		<polygon points="156 84 330 65 330 51 156 51" stroke="none" fill="url(#rapsgelb)" />	
+		<polygon points="1 51 156 51 156 84 1 100" stroke="none" fill="url(#feuerrot)" />	
+		<use href="#numberbody"/>
+	</g>
+
+	<g id="zero"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="1 1 111 13 111 88 1 100" stroke="none" fill="url(#rapsgelb)" />
+		<polygon points="221 24 330 36 330 65 221 77" stroke="none" fill="url(#rapsgelb)" />
+		<use href="#numberbody"/>
+	</g>
+	
+	<g id="code"  transform="translate(0 10)">
+		<polygon points="1 1 330 36 330 65 1 100" stroke="none" fill="url(#cremeweiss)" />
+		<polygon points="1 1 67 8 67 93 1 100" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="127 14 194 21 194 79 127 87" stroke="none" fill="url(#feuerrot)" />
+		<polygon points="253 27 330 36 330 65 253 73" stroke="none" fill="url(#feuerrot)" />
+		<use href="#numberbody"/>
+	</g>
+</defs>
+</svg>
+<!-- END of flaglibrary ISB -->
+</body>
+</html>
