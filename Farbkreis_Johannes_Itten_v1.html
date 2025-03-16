@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+  <head>
+
+<!--
+
+This work is licensed under version 4.0 of the Creative Commons CC-BY-SA license.
+The above human readable summary does not constitute an actual grant of license;
+please review https://creativecommons.org/licenses/by-sa/4.0/legalcode for the legal code of the license. 
+
+Contact: it@mathmat.org (Author: C. Vogel)
+
+
+
+Diese Arbeit ist lizensiert unter der Version 4.0 der Creative Commons CC-BY-SA Lizenz. 
+Für eine vollständige Version des Lizenztextes gehen Sie bitte auf folgende Seite:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode (englisch) bzw. auf:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode.de für die deutsche Übersetzung.
+
+Kontakt: it@mathmat.org (Autor: C. Vogel)
+
+-->
+
+<!--
+Version 1.0, 15.3.2025; Farbwechsel interaktiv.
+-->
+
+   
+    <title>Canvas</title>
+    <meta charset="utf-8">
+    <style>
+      h1 {font-family:sans-serif;font-size:18pt;}
+      body {font-family:sans-serif;margin-left:20mm;}
+    </style>
+ </head>
+ <body onLoad="drawMyImage();">
+   <h1>Der Zwölfteilige Farbkreis nach Johannes Itten</h1>
+  
+   
+   <form id="eingabe">
+     <input type="radio" id="leer" name="fillstyle" value="colorless" onClick="drawMyImage(3);"><label for="leer">ohne Farben</label>
+     <input type="radio" id="rgb" name="fillstyle" value="rgb" onClick="drawMyImage(1);"><label for="rgb">RGB-Stil</label>
+     <input type="radio" id="paint" name="fillstyle" value="paint" onClick="drawMyImage(0);" ><label for="paint">Farbkasten-Stil</label>
+   </form><br><br>
+	
+   <canvas id="myCanvas" width="600" height="600"></canvas>
+   
+   <div style="margin-top:2em;"><a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.de" target="_new"><img src="https://licensebuttons.net/l/by-sa/3.0/88x31.png" 	style="height:20px;" alt="CC-BY-SA 4.0"></a>&nbsp;Autor: Carsten Vogel, Version 1.0</div>
+	
+   <script type="text/javascript">
+
+   function drawMyImage(choice) {
+     
+       function d2r(deg) {	return deg * Math.PI / 180; } //in: degree out: radians
+     
+    var c = document.getElementById("myCanvas");
+    var i = c.getContext("2d");
+    let index = 0;
+    let farbe = ["#fff"]; // für colorless
+
+	 switch(choice) {
+	   case 0:
+	     farbe = ["#ffff00","#ffd000","#ff8000","#ff5000","#ff0000","#d00050","#800080","#5000d0","#0000d0","#005050","#00A040","#a0d000"];
+	   break;
+	   case 1:
+            farbe = ["#ffff00","#ffC000","#ff8000","#ff4000","#ff0000","#ff0080","#ff00ff","#8080ff","#00ffff","#00ff80","#00ff00","#80ff00"];
+	   break;
+	   default:
+            farbe = ["#fff"];
+	 }
+
+  
+    let mx = 295; // X center of circle
+    let my = 295; // Y center of circle
+    let radiusA = mx; // outer circle radius
+    let radiusB = .66*radiusA; // inner circle radius
+    let a = radiusB * Math.cos(d2r(30)); 
+    let b = radiusB * Math.cos(d2r(60));
+
+    for (alpha = 105; alpha > -226; alpha = alpha - 30) { // outer ring segments
+      i.beginPath();
+	i.strokeStyle = "black";
+  	i.fillStyle = farbe[index]; index++;
+	i.moveTo(mx + radiusB * Math.cos(d2r(alpha)), my - radiusB * Math.sin(d2r(alpha)));
+	i.lineTo(mx + radiusA * Math.cos(d2r(alpha)), my - radiusA * Math.sin(d2r(alpha)));
+	i.arc(mx,my, radiusA, d2r(-alpha), d2r(-alpha+30));
+	i.lineTo(mx + radiusB * Math.cos(d2r(alpha-30)), my - radiusB * Math.sin(d2r(alpha-30)));
+	i.arc(mx,my, radiusB, d2r(-alpha), d2r(-alpha+30)); // BUG: arc still fills/stroke direct connection
+      i.closePath();
+      i.fill();
+      i.stroke();
+    }
+     
+     i.beginPath(); // clearing inner ring (canvas workaround)
+     i.fillStyle = "white";
+     i.arc(mx,my,radiusB-1,0,d2r(360)); // linewidth=1?
+     i.fill();
+    i.closePath();
+    i.strokeStyle = "black";
+
+   i.beginPath(); // yellow
+     i.fillStyle = farbe[0];
+     i.lineTo(mx, my-radiusB);
+     i.lineTo(mx+a/2, my-b/2);
+     i.lineTo(mx, my);
+     i.lineTo(mx-a/2, my-b/2);
+   i.closePath();
+   i.fill();
+   i.stroke();
+
+   i.beginPath(); // red
+     i.fillStyle = farbe[4];
+     i.lineTo(mx, my);
+     i.lineTo(mx, my+b);
+     i.lineTo(mx+a, my+b);
+     i.lineTo(mx+a/2, my-b/2);
+   i.closePath();
+   i.fill();
+   i.stroke();
+
+   i.beginPath(); // blue
+     i.fillStyle = farbe[8];
+     i.lineTo(mx, my);
+     i.lineTo(mx-a/2, my-b/2);
+     i.lineTo(mx-a, my+b);
+     i.lineTo(mx, my+b);
+   i.closePath();
+   i.fill();
+   i.stroke();
+
+   i.beginPath(); // orange
+     i.fillStyle = farbe[2];
+     i.lineTo(mx, my-radiusB);
+     i.lineTo(mx+a, my+b);
+     i.lineTo(mx+a, my-b);
+   i.closePath();
+   i.fill();
+   i.stroke();
+
+   i.beginPath(); // violet
+     i.fillStyle = farbe[6];
+     i.lineTo(mx+a, my+b);
+     i.lineTo(mx-a, my+b);
+     i.lineTo(mx, my+radiusB);
+   i.closePath();
+   i.fill();
+   i.stroke();
+
+   i.beginPath(); // green
+     i.fillStyle = farbe[10];
+     i.lineTo(mx-a, my+b);
+     i.lineTo(mx-a, my-b);
+     i.lineTo(mx, my-radiusB);
+   i.closePath();
+   i.fill();
+	 i.stroke();
+     }//drawmy
+</script>
+</body>
+</html>
