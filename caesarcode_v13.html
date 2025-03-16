@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<!--
+
+This work is licensed under version 4.0 of the Creative Commons CC-BY-SA license.
+The above human readable summary does not constitute an actual grant of license;
+please review https://creativecommons.org/licenses/by-sa/4.0/legalcode for the legal code of the license. 
+
+Contact: it@mathmat.org (Author: C. Vogel)
+
+
+
+Diese Arbeit ist lizensiert unter der Version 4.0 der Creative Commons CC-BY-SA Lizenz. 
+Für eine vollständige Version des Lizenztextes gehen Sie bitte auf folgende Seite:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode (englisch) bzw. auf:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode.de für die deutsche Übersetzung.
+
+Kontakt: it@mathmat.org (Autor: C. Vogel)
+
+-->
+
+<!--
+Version 1.3
+ Schlüssel wird auf 0 gesetzt, nach Abfang eines ungültigen Schlüssels.
+-->
+
+
+	<title>Verschlüsselung mit dem Caesar-Code</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Werkzeug zur Verschlüsselung mit dem Caesar-Code">
+	<meta name="keywords" content="Caesar,Cäsar,Code,Verschlüsselung,Informatik,Unterricht,Schule">
+	<meta name="author" content="C. Vogel">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<script>	
+		
+		function caesar() {
+		
+			schluessel = document.getElementById(["schluessel"]).value.toUpperCase().charCodeAt(0) - 65;		
+			if ( schluessel < 0 || schluessel > 25 ) {schluessel = 0; alert("Ungültiger Schlüssel\nMögliche Eingaben: a-z oder A-Z."); }			
+			
+			document.getElementById(["sNummer"]).innerHTML = "(" + schluessel + ")";
+			document.getElementById(["verschiebung"]).innerHTML = " ".repeat(schluessel) + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";				
+			document.getElementById(["geheimtext"]).value = verschluessele(document.getElementById(["klartext"]).value.toUpperCase(),schluessel);		
+		
+		}
+		
+		function verschluessele(eingabe, verschiebung) {
+		
+			rueckgabe = "";
+			
+			for (i = 0; i < eingabe.length; i++ ) {
+				
+				myChar = eingabe.substring(i, i+1).charCodeAt(0);
+				
+				rueckgabe +=  
+					(myChar > 64 && myChar < 91 )? ( 
+							(myChar + verschiebung < 91) ?
+								(String.fromCharCode(myChar + verschiebung)):
+								(String.fromCharCode(myChar + verschiebung - 26))
+						):(
+							eingabe.substring(i,i+1)
+						);
+			
+			}
+				
+			return rueckgabe;
+		
+		}
+	
+	</script>
+	
+	<style>
+	
+		body, input, textarea {
+			font-family:sans-serif;font-size:14pt;
+		}
+		
+		input {
+			background-color:lavender;border: #000 solid 1px;
+		}
+		
+	</style>
+	
+</head>
+
+<body>
+	
+	<h1>Verschlüsselung mit dem Caesar-Code</h1>
+		
+	<form id="eingabe">
+	
+		<table>
+	
+			<tr>
+				<td>Klartext</td>
+				<td><input type="text" id="klartext" value="Klartext" size="80"></td>
+			</tr>
+			
+			<tr>
+				<td>Schlüssel</td>
+				<td>A➟<input type="text" id="schluessel" value="A" maxlength="1" size="1"> <span id="sNummer"></span></td>
+			</tr>
+			
+			<tr>
+				<td colspan="2"><pre id="verschiebung">ABCDEFGHIJKLMNOPQRSTUVWXYZ</pre><pre>ABCDEFGHIJKLMNOPQRSTUVWXYZABCDEFGHIJKLMNOPQRSTUVWXY</pre></td>
+			</tr>
+			
+			<tr>
+				<td>Geheimtext:</td>
+				<td><input type="text" id="geheimtext" value="Geheimtext" size="80"></td>
+			</tr>
+			
+			<tr>
+				<td colspan="2"><hr></td>
+			</tr>
+			
+			<tr>
+				<td><input type="button" onClick="caesar()" value="Verschlüsseln"></td>
+				<td><input type="reset" value="Eingaben zurücksetzen"></td>
+			</tr>
+		
+		</table>
+		
+	</form>
+	
+	<div style="margin-top:1em;">
+		<a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.de" target="_new"><img src="https://licensebuttons.net/l/by-sa/3.0/88x31.png" style="height:20px;" alt="CC-BY-SA 4.0"></a>
+		Autor: Carsten Vogel, Version 1.3
+	</div>
+	
+</body>
+
+</html>
