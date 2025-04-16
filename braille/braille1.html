@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+	<title>Encoding</title>
+	<meta charset="utf-8">
+	<meta name="description" content="Encoding">
+	<meta name="keywords" content="Informatik">
+	<meta name="author" content="C. Vogel">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!--
+
+This work is licensed under version 4.0 of the Creative Commons CC-BY-SA license.
+The above human readable summary does not constitute an actual grant of license;
+please review https://creativecommons.org/licenses/by-sa/4.0/legalcode for the legal code of the license. 
+
+Contact: it@mathmat.org (Author: C. Vogel)
+
+
+
+Diese Arbeit ist lizensiert unter der Version 4.0 der Creative Commons CC-BY-SA Lizenz. 
+Für eine vollständige Version des Lizenztextes gehen Sie bitte auf folgende Seite:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode (englisch) bzw. auf:
+ https://creativecommons.org/licenses/by-sa/4.0/legalcode.de für die deutsche Übersetzung.
+
+Kontakt: it@mathmat.org (Autor: C. Vogel)
+
+-->
+
+<!--
+
+Version 0.9, 12.4.2025
+ Übernahme des Quelltextes von Flaggenhissen.
+-->
+
+	
+<style> 
+<!--
+
+	body, input, textarea {
+		font-family:sans-serif;
+		font-size:14pt;
+	}
+		
+	input {
+		background-color:lavender;border: #000 solid 1px;
+	}
+	
+	h1 {
+		font-size: 20pt;
+	}
+
+	td.output {
+	    border: 1px solid #00f;
+	    text-align:center;
+	}
+		
+-->
+</style>
+<script>
+
+  function uebersetze(char) {
+      let alphabet = { 
+	  A:"<img src='Braille_A1.svg.png'>",
+	  B:"<img src='Braille_B2.svg.png'>",
+	  C:"<img src='Braille_C3.svg.png'>",
+	  D:"<img src='Braille_D4.svg.png'>",
+ 	  E:"<img src='Braille_E5.svg.png'>",
+ 	  F:"<img src='Braille_F6.svg.png'>",
+	  G:"<img src='Braille_G7.svg.png'>",
+	  H:"<img src='Braille_H8.svg.png'>",
+	  I:"<img src='Braille_I9.svg.png'>",
+	  J:"<img src='Braille_J0.svg.png'>",
+	  K:"<img src='Braille_K.svg.png'>",
+	  L:"<img src='Braille_L.svg.png'>",
+	  M:"<img src='Braille_M.svg.png'>",
+	  N:"<img src='Braille_N.svg.png'>",
+	  O:"<img src='Braille_O.svg.png'>",
+	  P:"<img src='Braille_P.svg.png'>",
+	  Q:"<img src='Braille_Q.svg.png'>",
+	  R:"<img src='Braille_R.svg.png'>",
+	  S:"<img src='Braille_S.svg.png'>",
+	  T:"<img src='Braille_T.svg.png'>",
+	  U:"<img src='Braille_U.svg.png'>",
+	  V:"<img src='Braille_V.svg.png'>",
+	  W:"<img src='Braille_W.svg.png'>",
+	  X:"<img src='Braille_X.svg.png'>",
+	  Y:"<img src='Braille_Y.svg.png'>",
+	  Z:"<img src='Braille_Z.svg.png'>",
+	  1:"<img src='Braille_A1.svg.png'>",
+	  2:"<img src='Braille_B2.svg.png'>",
+	  3:"<img src='Braille_C3.svg.png'>",
+	  4:"<img src='Braille_D4.svg.png'>",
+	  5:"<img src='Braille_E5.svg.png'>",
+	  6:"<img src='Braille_F6.svg.png'>",
+	  7:"<img src='Braille_G7.svg.png'>",
+	  8:"<img src='Braille_H8.svg.png'>",
+	  9:"<img src='Braille_I9.svg.png'>",
+	  0:"<img src='Braille_J0.svg.png'>",
+          '!':"<img src='Braille_ExclamationPoint.svg.png'>",  
+          ',':"<img src='Braille_Comma.svg.png'>",
+          ' ':"&nbsp;&nbsp;&nbsp;",
+          '#':"<img src='Braille_NumberSign.svg.png'>",
+  '$':"<img src='Braille_DecimalPoint.svg.png'>",
+  '>':"<img src='Braille_Currency.svg.png'>",
+  '-':"<img src='Braille_Hyphen.svg.png'>"
+  }
+  return alphabet[char];
+  }
+  
+
+  function encodiere() {
+  let nachricht = document.getElementById("eingabe").value.toUpperCase();
+  nachricht = ">"+nachricht;
+      let uebersetzung = "<table style=\"border:1px solid #000;\"><tr>";
+
+      for (i=0; i<nachricht.length; i++) {
+	  uebersetzung  += "<td class=\"output\">" + uebersetze(nachricht[i]); + "</td>";
+      }
+
+      uebersetzung += "</tr><tr>";
+
+      for (i=0; i < nachricht.length; i++ ) {
+	  uebersetzung += "<td class=\"output\">" + nachricht[i] + "</td>";
+      }
+      
+      uebersetzung += "</tr></table>";
+    
+      document.getElementById("ausgabe").innerHTML = uebersetzung;
+  }
+  
+  function loescheAusgabe() {
+    document.getElementById("ausgabe").innerHTML = "";
+  }
+
+
+  function stopRKey(evt) {
+  // https://stackoverflow.com/questions/7060750/detect-the-enter-key-in-a-text-input-field
+  // Kudos: https://stackoverflow.com/users/3577946/indra-kumar-s (Sorry, I altered your idea! ;) )
+      
+    var evt = (evt) ? evt : ((event) ? event : null);
+    var node = (evt.target) ? evt.target : ((evt.srcElement) ? evt.srcElement : null);
+      if ((evt.keyCode == 13) && (node.type=="text"))  {encodiere(); return false;} 
+ } 
+
+</script>
+
+</head>
+
+<body>
+  <script>document.onkeypress = stopRKey;</script>
+  <form>
+    <table>
+      <tr>
+	<td>Eingabe:
+	  <input type="text" id="eingabe" value="Eingabe">
+	  <input type="button" value="Abschicken" onClick="encodiere();">
+	  <input type="reset" value="Eingaben zurücksetzen" onClick="loescheAusgabe();">
+	</td>
+      </tr>
+      <tr>
+	<td><hr></td>
+      </tr>
+      <tr>
+	<td id="ausgabe" style="font-size:3em;border-top:1pt solid #000;border-bottom:1pt solid #000;"></td>
+      </tr>
+    </table>
+  </form>
+	
+  <div style="margin-top:1em;">
+    <a href="https://creativecommons.org/licenses/by-sa/4.0/legalcode.de" target="new">
+      <img src="https://licensebuttons.net/l/by-sa/3.0/88x31.png" style="height:20px;" alt="CC-BY-SA 4.0">
+    </a>
+    Autor: Carsten Vogel (it@mathmat.org), Version 0.9, 12.4.2025
+  </div>
+  </body>
+</html>
